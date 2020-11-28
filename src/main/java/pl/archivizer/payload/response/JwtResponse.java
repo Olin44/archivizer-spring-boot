@@ -1,14 +1,17 @@
 package pl.archivizer.payload.response;
 
+import lombok.Builder;
+
 import java.util.List;
 
+@Builder
 public class JwtResponse {
 	private String token;
-	private String type = "Bearer";
+	private final String type = "Bearer";
 	private Long id;
 	private String username;
 	private String email;
-	private List<String> roles;
+	private final List<String> roles;
 
 	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
 		this.token = accessToken;
@@ -28,10 +31,6 @@ public class JwtResponse {
 
 	public String getTokenType() {
 		return type;
-	}
-
-	public void setTokenType(String tokenType) {
-		this.type = tokenType;
 	}
 
 	public Long getId() {
