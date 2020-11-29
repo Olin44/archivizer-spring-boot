@@ -1,7 +1,9 @@
 package pl.archivizer;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ArchivizerSpringBootApplication {
@@ -10,4 +12,8 @@ public class ArchivizerSpringBootApplication {
 		SpringApplication.run(ArchivizerSpringBootApplication.class, args);
 	}
 
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 }

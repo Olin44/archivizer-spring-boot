@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.archivizer.models.ERole;
 import pl.archivizer.models.Role;
 import pl.archivizer.models.User;
+import pl.archivizer.models.UserDetailsData;
 import pl.archivizer.payload.request.SignupRequest;
 import pl.archivizer.payload.response.MessageResponse;
 import pl.archivizer.repository.RoleRepository;
@@ -72,6 +73,7 @@ public class SignupService {
             });
         }
 
+        user.setUserDetailsData(new UserDetailsData());
         user.setRoles(roles);
         userRepository.save(user);
 
