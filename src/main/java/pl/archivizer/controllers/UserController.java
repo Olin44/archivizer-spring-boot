@@ -1,10 +1,7 @@
 package pl.archivizer.controllers;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.archivizer.payload.response.SimpleUserData;
 import pl.archivizer.services.SimpleUserDataService;
 
@@ -24,5 +21,18 @@ public class UserController {
     @GetMapping("users")
     public ResponseEntity<List<SimpleUserData>> getSimpleUserData(){
         return simpleUserDataService.getSimpleUserData();
+    }
+
+    @GetMapping("users1")
+    public ResponseEntity<List<SimpleUserData>> getSimpleUserDataWithPaginationAndSorting(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return simpleUserDataService.getSimpleUserDataWithPaginationAndSorting(pageNo, pageSize, sortBy);
+    }
+
+    @GetMapping("users/count")
+    public Long countUsers(){
+        return simpleUserDataService.countUsers();
     }
 }
