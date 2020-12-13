@@ -16,4 +16,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 	Boolean existsByUsername(String username);
 
 	Boolean existsByEmail(String email);
+
+	List<User> findByIdIn(List<Long> idList);
 }

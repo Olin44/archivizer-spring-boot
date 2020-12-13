@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -15,6 +16,8 @@ import java.util.Date;
                 @UniqueConstraint(columnNames = "id"),
         })
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class UserDetailsData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,44 +31,13 @@ public class UserDetailsData {
     @Temporal(TemporalType.TIMESTAMP)
     private Date editDate;
 
-    private String name;
-    private String surname;
+    @NotNull(message = "Name can't be empty")
+    private String name = "Must be set by admin";
 
-    @Getter
-    @Setter
-    private Long userId;
+    @NotNull(message = "Surname can't be empty")
+    private String surname = "Must be set by admin";
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public Date getEditDate() {
-        return editDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @NotNull(message = "Pesel can't be empty")
+    private String pesel = "Must be set by admin";
 
 }

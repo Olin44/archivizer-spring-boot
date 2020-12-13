@@ -2,7 +2,10 @@ package pl.archivizer.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.archivizer.payload.request.ActivateAccountsRequest;
 import pl.archivizer.payload.response.SimpleUserData;
+import pl.archivizer.payload.response.UserDetailsDataResponse;
+import pl.archivizer.payload.response.UsersCountResponse;
 import pl.archivizer.services.SimpleUserDataService;
 
 import java.util.List;
@@ -18,12 +21,12 @@ public class UserController {
         this.simpleUserDataService = simpleUserDataService;
     }
 
-    @GetMapping("users")
-    public ResponseEntity<List<SimpleUserData>> getSimpleUserData(){
-        return simpleUserDataService.getSimpleUserData();
-    }
+//    @GetMapping("users")
+//    public ResponseEntity<List<SimpleUserData>> getSimpleUserData(){
+//        return simpleUserDataService.getSimpleUserData();
+//    }
 
-    @GetMapping("users1")
+    @GetMapping("users")
     public ResponseEntity<List<SimpleUserData>> getSimpleUserDataWithPaginationAndSorting(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
@@ -32,7 +35,17 @@ public class UserController {
     }
 
     @GetMapping("users/count")
-    public Long countUsers(){
+    public UsersCountResponse countUsers(){
         return simpleUserDataService.countUsers();
+    }
+
+    @PostMapping("users/activateAccounts")
+    public void activateAccounts(@RequestBody ActivateAccountsRequest activateAccountsRequest){
+        simpleUserDataService.activateAccounts(activateAccountsRequest);
+    }
+
+    @GetMapping("users/{id}/details")
+    public ResponseEntity<UserDetailsDataResponse> getUserDetails(@PathVariable Long id){
+        return simpleUserDataService.getUserDetails(id);
     }
 }
