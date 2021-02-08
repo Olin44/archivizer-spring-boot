@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import pl.archivizer.models.Role;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class UserDetailsDataResponse {
     private final String name;
     private final String surname;
     private final String pesel;
-    private final Date creationDate;
-    private final Date editDate;
+    private final LocalDateTime creationDate;
+    private final LocalDateTime editDate;
     private final Set<Role> roles;
 }

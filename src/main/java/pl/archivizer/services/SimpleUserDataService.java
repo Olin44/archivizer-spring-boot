@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pl.archivizer.exceptions.UserNotFoundException;
+import pl.archivizer.exceptions.EntityNotFoundException;
 import pl.archivizer.models.ERole;
 import pl.archivizer.models.Role;
 import pl.archivizer.models.User;
@@ -18,9 +18,10 @@ import pl.archivizer.payload.response.UsersCountResponse;
 import pl.archivizer.repository.RoleRepository;
 import pl.archivizer.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -89,7 +90,7 @@ public class SimpleUserDataService {
 
     public ResponseEntity<UserDetailsDataResponse> getUserDetails(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException(id, "user"));
         return ResponseEntity.ok(createUserDetailsDataResponse(user));
     }
 
@@ -104,8 +105,8 @@ public class SimpleUserDataService {
             .name(userDetailsData.getName())
             .surname(userDetailsData.getSurname())
             .pesel(userDetailsData.getPesel())
-            .creationDate(userDetailsData.getCreationDate())
-            .editDate(userDetailsData.getEditDate())
+            .creationDate(LocalDateTime.ofInstant(userDetailsData.getCreationDate().toInstant(), ZoneId.systemDefault()))
+            .editDate(LocalDateTime.ofInstant(userDetailsData.getEditDate().toInstant(), ZoneId.systemDefault()))
             .roles(user.getRoles())
             .build();
     }

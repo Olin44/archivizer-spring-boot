@@ -14,17 +14,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/")
 public class UserController {
-
     SimpleUserDataService simpleUserDataService;
 
     public UserController(SimpleUserDataService simpleUserDataService) {
         this.simpleUserDataService = simpleUserDataService;
     }
-
-//    @GetMapping("users")
-//    public ResponseEntity<List<SimpleUserData>> getSimpleUserData(){
-//        return simpleUserDataService.getSimpleUserData();
-//    }
 
     @GetMapping("users")
     public ResponseEntity<List<SimpleUserData>> getSimpleUserDataWithPaginationAndSorting(
