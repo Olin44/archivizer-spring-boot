@@ -15,4 +15,6 @@ public class CreateOrUpdateQualificationRequest extends BasicRequest{
     @NotNull
     @NotBlank
     String description;
+    ArchivizeAfterRequest archivizeAfterRequest;
+    private boolean canBeDeleted;
 }

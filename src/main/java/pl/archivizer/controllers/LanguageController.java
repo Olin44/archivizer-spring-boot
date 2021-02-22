@@ -52,4 +52,9 @@ public class LanguageController {
     public ResponseEntity<UpdateSuccessResponse> update(@PathVariable Long id, @RequestBody @Validated CreateOrUpdateLanguageRequest updateRequest){
         return languageService.update(updateRequest, id, CreateOrUpdateLanguageRequest.class);
     }
+
+    @GetMapping("languages/count")
+    public CountResponse countUsers(){
+        return languageService.count();
+    }
 }

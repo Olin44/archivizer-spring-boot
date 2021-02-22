@@ -14,6 +14,7 @@ import pl.archivizer.exceptions.CustomEntityNotFoundException;
 import pl.archivizer.mappers.SimpleMapper;
 import pl.archivizer.models.BasicEntity;
 import pl.archivizer.payload.request.BasicRequest;
+import pl.archivizer.payload.response.CountResponse;
 import pl.archivizer.payload.response.CreateSuccessResponse;
 import pl.archivizer.payload.response.DeletionSuccessResponse;
 import pl.archivizer.payload.response.UpdateSuccessResponse;
@@ -94,6 +95,10 @@ public abstract class BasicDictionaryService<Response extends BasicResponse, Res
         simpleMapper.map(request, entity);
         repository.save(entity);
         return ResponseEntity.ok(new UpdateSuccessResponse());
+    }
+
+    public CountResponse count() {
+        return new CountResponse(repository.count());
     }
 
 }

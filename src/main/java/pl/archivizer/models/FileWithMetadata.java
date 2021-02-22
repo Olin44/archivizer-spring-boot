@@ -3,15 +3,18 @@ package pl.archivizer.models;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Setter
 @Getter
 @Entity
+@ToString
 @Table(	name = "file_metadata",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "title"),
@@ -63,5 +66,8 @@ public class FileWithMetadata {
     @Column(columnDefinition="bytea")
     private byte[] file;
 
+    private Date creationDate;
+
+    private boolean canBeDeleted;
 
 }

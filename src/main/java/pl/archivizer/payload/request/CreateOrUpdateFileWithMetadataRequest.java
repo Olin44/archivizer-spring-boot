@@ -6,6 +6,7 @@ import lombok.Getter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -61,10 +62,5 @@ public class CreateOrUpdateFileWithMetadataRequest {
 
     @NotNull
     private final String file;
-
-
-
-
-
 
 }

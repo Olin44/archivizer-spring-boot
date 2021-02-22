@@ -48,5 +48,10 @@ public class QualificationController {
         return qualificationService.update(updateRequest, id, CreateOrUpdateQualificationRequest.class);
     }
 
+    @GetMapping("qualifications/count")
+    public CountResponse countUsers(){
+        return qualificationService.count();
+    }
+
 
 }

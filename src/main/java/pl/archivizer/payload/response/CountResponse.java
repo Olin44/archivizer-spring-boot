@@ -7,6 +7,6 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class UsersCountResponse {
-    private final Long usersCount;
+public class CountResponse {
+    private final Long count;
 }

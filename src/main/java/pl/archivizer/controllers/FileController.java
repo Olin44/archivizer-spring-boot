@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.archivizer.payload.request.CreateOrUpdateFileWithMetadataRequest;
+import pl.archivizer.payload.request.DeleteFilesRequest;
 import pl.archivizer.payload.response.*;
 import pl.archivizer.services.FilesMetadataService;
 
@@ -45,5 +46,19 @@ public class FileController {
     @PostMapping("file/{id}")
     public ResponseEntity<UpdateSuccessResponse> update(@PathVariable Long id, @RequestBody @Validated CreateOrUpdateFileWithMetadataRequest request){
         return filesMetadataService.update(request, id);
+    }
+
+    @PostMapping("files_to_delete")
+    public ResponseEntity<List<FileWithMetadataSmallResponse>> getFilesToDeleteWithPaginationAndSorting(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "USER") String role){
+        return filesMetadataService.getFilesToDeleteWithPaginationAndSorting(pageNo, pageSize, sortBy, FileWithMetadataSmallResponse.class, role);
+    }
+
+    @DeleteMapping("delete_files_by_ids")
+    public ResponseEntity<DeletionSuccessResponse> deleteByIds(DeleteFilesRequest deleteFilesRequest){
+        return filesMetadataService.deleteByIds(deleteFilesRequest);
     }
 }

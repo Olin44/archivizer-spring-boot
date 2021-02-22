@@ -11,7 +11,7 @@ import pl.archivizer.models.UserDetailsData;
 import pl.archivizer.payload.request.SignupRequest;
 import pl.archivizer.payload.response.MessageResponse;
 import pl.archivizer.repository.RoleRepository;
-import pl.archivizer.repository.UserRepository;
+import pl.archivizer.repository.UsersRepository;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,20 +19,20 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class SignupService {
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
 
     private final RoleRepository roleRepository;
 
     private final PasswordEncoder encoder;
 
     public ResponseEntity<?> registerUser(SignupRequest signUpRequest){
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+        if (usersRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (usersRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
@@ -75,7 +75,7 @@ public class SignupService {
 
         user.setUserDetailsData(new UserDetailsData());
         user.setRoles(roles);
-        userRepository.save(user);
+        usersRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }

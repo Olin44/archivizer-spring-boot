@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "archivized.time.cron.expresion",
+      "type": "java.lang.String",
+      "description": "Description for archivized.time.cron.expresion."
+    },
+    {
+      "name": "archivized.time.cron.expresion",
+      "type": "java.lang.String",
+      "description": "Description for archivized.time.cron.expresion."
+    }
+  ] }

@@ -1,7 +1,6 @@
 package pl.archivizer.mappers;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import pl.archivizer.exceptions.CustomEntityNotFoundException;
 import pl.archivizer.exceptions.EntityAlreadyExistException;
@@ -16,14 +15,14 @@ import java.util.stream.Collectors;
 @Service
 public class FileMetadataMapper {
     private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final QualificationRepository qualificationRepository;
     private final LanguageRepository languageRepository;
     private final FileWithMetadataRepository fileWithMetadataRepository;
 
-    public FileMetadataMapper(RoleRepository roleRepository, UserRepository userRepository, QualificationRepository qualificationRepository, LanguageRepository languageRepository, FileWithMetadataRepository fileWithMetadataRepository) {
+    public FileMetadataMapper(RoleRepository roleRepository, UsersRepository usersRepository, QualificationRepository qualificationRepository, LanguageRepository languageRepository, FileWithMetadataRepository fileWithMetadataRepository) {
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
+        this.usersRepository = usersRepository;
         this.qualificationRepository = qualificationRepository;
         this.languageRepository = languageRepository;
         this.fileWithMetadataRepository = fileWithMetadataRepository;
@@ -52,7 +51,7 @@ public class FileMetadataMapper {
 
     public FileWithMetadata mapToEntityCreate(CreateOrUpdateFileWithMetadataRequest request) {
         byte[] file = Base64.decodeBase64(request.getFile());
-        User user = userRepository.findById(request.getCreatorId())
+        User user = usersRepository.findById(request.getCreatorId())
                 .orElseThrow(() -> new EntityNotFoundException(request.getCreatorId(), "user"));
 
         FileWithMetadata fileWithMetadata = new FileWithMetadata();
@@ -68,7 +67,7 @@ public class FileMetadataMapper {
         fileWithMetadata.setType("image");
         fileWithMetadata.setFormat(request.getFormat());
         fileWithMetadata.setRolesWithAccess(roleRepository.findByIdIn(request.getRolesWithAccessId()));
-        fileWithMetadata.setUsersWithAccess(userRepository.findByIdIn(request.getUsersWithAccess()));
+        fileWithMetadata.setUsersWithAccess(usersRepository.findByIdIn(request.getUsersWithAccess()));
 
         Qualification qualification = qualificationRepository
                 .findById(request.getQualificationId())

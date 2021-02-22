@@ -1,45 +1,37 @@
 package pl.archivizer.controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import pl.archivizer.payload.request.ActivateAccountsRequest;
-import pl.archivizer.payload.response.SimpleUserData;
-import pl.archivizer.payload.response.UserDetailsDataResponse;
-import pl.archivizer.payload.response.UsersCountResponse;
-import pl.archivizer.services.SimpleUserDataService;
-
-import java.util.List;
+import pl.archivizer.models.User;
+import pl.archivizer.payload.request.CreateOrUpdateUserRequest;
+import pl.archivizer.payload.response.*;
+import pl.archivizer.services.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/")
-public class UserController {
-    SimpleUserDataService simpleUserDataService;
+public class UserController{
 
-    public UserController(SimpleUserDataService simpleUserDataService) {
-        this.simpleUserDataService = simpleUserDataService;
+   private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping("users")
-    public ResponseEntity<List<SimpleUserData>> getSimpleUserDataWithPaginationAndSorting(
-            @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy) {
-        return simpleUserDataService.getSimpleUserDataWithPaginationAndSorting(pageNo, pageSize, sortBy);
+    @DeleteMapping("user/{id}")
+    public ResponseEntity<DeletionSuccessResponse> deleteById(@PathVariable Long id){
+        return userService.deleteById(id);
     }
 
-    @GetMapping("users/count")
-    public UsersCountResponse countUsers(){
-        return simpleUserDataService.countUsers();
+    @PostMapping("user")
+    public ResponseEntity<CreateSuccessResponse> create(@RequestBody @Validated CreateOrUpdateUserRequest createRequest){
+        return userService.create(createRequest, User.class);
     }
 
-    @PostMapping("users/activateAccounts")
-    public void activateAccounts(@RequestBody ActivateAccountsRequest activateAccountsRequest){
-        simpleUserDataService.activateAccounts(activateAccountsRequest);
-    }
-
-    @GetMapping("users/{id}/details")
-    public ResponseEntity<UserDetailsDataResponse> getUserDetails(@PathVariable Long id){
-        return simpleUserDataService.getUserDetails(id);
+    @PostMapping("user/{id}")
+    public ResponseEntity<UpdateSuccessResponse> update(@PathVariable Long id,
+                                                        @RequestBody  @Validated CreateOrUpdateUserRequest updateRequest){
+        return userService.update(updateRequest, id, CreateOrUpdateUserRequest.class);
     }
 }

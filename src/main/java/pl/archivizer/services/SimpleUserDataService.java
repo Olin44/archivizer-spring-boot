@@ -14,9 +14,9 @@ import pl.archivizer.models.UserDetailsData;
 import pl.archivizer.payload.request.ActivateAccountsRequest;
 import pl.archivizer.payload.response.SimpleUserData;
 import pl.archivizer.payload.response.UserDetailsDataResponse;
-import pl.archivizer.payload.response.UsersCountResponse;
+import pl.archivizer.payload.response.CountResponse;
 import pl.archivizer.repository.RoleRepository;
-import pl.archivizer.repository.UserRepository;
+import pl.archivizer.repository.UsersRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -27,16 +27,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class SimpleUserDataService {
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final RoleRepository roleRepository;
 
-    public SimpleUserDataService(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
+    public SimpleUserDataService(UsersRepository usersRepository, RoleRepository roleRepository) {
+        this.usersRepository = usersRepository;
         this.roleRepository = roleRepository;
     }
 
     public ResponseEntity<List<SimpleUserData>> getSimpleUserData() {
-        List<User> users = userRepository.findAll();
+        List<User> users = usersRepository.findAll();
         return ResponseEntity.ok(users.stream()
                 .map(this::convertUserToSimpleUserData)
                 .collect(Collectors.toList()));
@@ -64,7 +64,7 @@ public class SimpleUserDataService {
             Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-        Page<SimpleUserData> pagedResult = userRepository.findAll(paging).map(this::convertUserToSimpleUserData);
+        Page<SimpleUserData> pagedResult = usersRepository.findAll(paging).map(this::convertUserToSimpleUserData);
 
         if (pagedResult.hasContent()) {
             return ResponseEntity.ok(pagedResult.getContent());
@@ -73,23 +73,23 @@ public class SimpleUserDataService {
         }
     }
 
-    public UsersCountResponse countUsers() {
-        return new UsersCountResponse(userRepository.count());
+    public CountResponse countUsers() {
+        return new CountResponse(usersRepository.count());
     }
 
     public void activateAccounts(ActivateAccountsRequest activateAccountsRequest) {
-        List<User> users = userRepository.findByIdIn(activateAccountsRequest.getListOfIdToActivate());
+        List<User> users = usersRepository.findByIdIn(activateAccountsRequest.getListOfIdToActivate());
         Role role = roleRepository.findByName(ERole.ROLE_USER).get();
         for (User user : users) {
             if (!user.getRoles().contains(role)) {
                 user.getRoles().add(role);
-                userRepository.save(user);
+                usersRepository.save(user);
             }
         }
     }
 
     public ResponseEntity<UserDetailsDataResponse> getUserDetails(Long id) {
-        User user = userRepository.findById(id)
+        User user = usersRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id, "user"));
         return ResponseEntity.ok(createUserDetailsDataResponse(user));
     }

@@ -2,17 +2,23 @@ package pl.archivizer.mappers;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 import pl.archivizer.payload.response.simple.BasicResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class SimpleMapper<Response extends BasicResponse> {
 
     private final ModelMapper modelMapper;
+
+    public SimpleMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+        this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+    }
 
     public <S, T> List<T> mapList(List<S> source, Class<T> targetClass) {
         return source

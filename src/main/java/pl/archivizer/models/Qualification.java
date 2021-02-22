@@ -25,6 +25,12 @@ public class Qualification extends BasicEntity {
 
     private String description;
 
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name="archivize_after_id")
+    private ArchivizeAfter archivizeAfter;
+
+    private boolean canBeDeleted;
+
     public Qualification() {}
 
     public Qualification(@NotBlank @NotNull String type, String description) {
@@ -35,4 +41,6 @@ public class Qualification extends BasicEntity {
     public Qualification(@NotBlank @NotNull String type) {
         this.type = type;
     }
+
+
 }

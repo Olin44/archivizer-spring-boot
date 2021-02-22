@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import pl.archivizer.exceptions.ConstrainsViolationsException;
 import pl.archivizer.exceptions.CustomEntityNotFoundException;
 import pl.archivizer.exceptions.EntityNotFoundException;
 import pl.archivizer.payload.response.RequestNotValidResponse;
 import pl.archivizer.payload.response.ViolationResponse;
+import pl.archivizer.payload.response.errors.ConstrainsViolationResponse;
 import pl.archivizer.payload.response.errors.ErrorResponse;
 
 import javax.validation.ConstraintViolation;
@@ -56,24 +58,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
     }
 
-//    @Override
-//    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-//
-//        List<String> errorDetails = ex.getBindingResult().getAllErrors().stream()
-//                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-//                .collect(Collectors.toList());
-//
-//        ValidationErrorResponse error = ValidationErrorResponse.builder()
-//                .error("Validation error")
-//                .status(HttpStatus.BAD_REQUEST.value())
-//                .invalidFields(errorDetails)
-//                .build();
-//
-//        return ResponseEntity.badRequest().body(error);
-//    }
-@ExceptionHandler(SQLException.class)
-public final ResponseEntity<String> handleSqlExceptions(
-        SQLException ex) {
-    return new ResponseEntity<>("dupa", HttpStatus.BAD_REQUEST);
-}
+    @ExceptionHandler(SQLException.class)
+    public final ResponseEntity<String> handleSqlExceptions(
+            SQLException ex) {
+        return new ResponseEntity<>("dupa", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstrainsViolationsException.class)
+        public final ResponseEntity<ConstrainsViolationResponse> handleConstrainsViolationExceptions(ConstrainsViolationsException ex) {
+        ConstrainsViolationResponse response = new ConstrainsViolationResponse(ex.getMessage(), ex.getViolationsList());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }
