@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.archivizer.models.ERole;
 import pl.archivizer.payload.request.CreateOrUpdateFileWithMetadataRequest;
 import pl.archivizer.payload.request.DeleteFilesRequest;
+import pl.archivizer.payload.request.FilesPaginationRequest;
 import pl.archivizer.payload.response.*;
 import pl.archivizer.services.FilesMetadataService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -22,8 +25,13 @@ public class FileController {
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "USER") String role){
-        return filesMetadataService.getAllWithPaginationAndSorting(pageNo, pageSize, sortBy, FileWithMetadataSmallResponse.class, role);
+            @RequestParam(defaultValue = "") List<ERole> roles){
+        return filesMetadataService.getAllWithPaginationAndSorting(pageNo, pageSize, sortBy, FileWithMetadataSmallResponse.class, roles);
+    }
+
+    @PostMapping("files2")
+    public ResponseEntity<List<FileWithMetadataSmallResponse>> getWithPaginationAndSorting2(@RequestBody @Validated FilesPaginationRequest request){
+        return filesMetadataService.getAllWithPaginationAndSorting2(request, FileWithMetadataSmallResponse.class);
     }
 
     private final FilesMetadataService filesMetadataService;
@@ -61,4 +69,10 @@ public class FileController {
     public ResponseEntity<DeletionSuccessResponse> deleteByIds(DeleteFilesRequest deleteFilesRequest){
         return filesMetadataService.deleteByIds(deleteFilesRequest);
     }
+
+    @GetMapping("files/count")
+    public CountResponse countFiles(@RequestParam(defaultValue = "") List<ERole> roles){
+        return filesMetadataService.count(roles);
+    }
+
 }

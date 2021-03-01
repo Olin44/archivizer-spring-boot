@@ -53,5 +53,9 @@ public class QualificationController {
         return qualificationService.count();
     }
 
+    @GetMapping("qualifications/withoutPagination")
+    public ResponseEntity<List<QualificationTypeResponse>> getAll(){
+        return qualificationService.getAllWithoutPagination();
+    }
 
 }

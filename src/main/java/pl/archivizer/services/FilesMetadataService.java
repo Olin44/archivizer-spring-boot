@@ -16,12 +16,14 @@ import pl.archivizer.mappers.SimpleMapper;
 import pl.archivizer.models.*;
 import pl.archivizer.payload.request.CreateOrUpdateFileWithMetadataRequest;
 import pl.archivizer.payload.request.DeleteFilesRequest;
+import pl.archivizer.payload.request.FilesPaginationRequest;
 import pl.archivizer.payload.response.*;
 import pl.archivizer.repository.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,25 +68,25 @@ public class FilesMetadataService {
         }
     }
 
-    public ResponseEntity<List<FileWithMetadataSmallResponse>> getAllWithPaginationAndSorting(Integer pageNo, Integer pageSize, String sortBy, Class<FileWithMetadataSmallResponse> fileWithMetadataSmallResponseClass, String role) {
-            Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+    public ResponseEntity<List<FileWithMetadataSmallResponse>> getAllWithPaginationAndSorting(Integer pageNo, Integer pageSize, String sortBy, Class<FileWithMetadataSmallResponse> fileWithMetadataSmallResponseClass, List<ERole> roles) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-            Page<FileWithMetadataSmallResponse> pagedResult = fileWithMetadataRepository
-                    .findAllByUsersWithAccess_Roles_Name(ERole.valueOf(role), paging)
-                    .map(s -> simpleMapper.mapToDTO(s, fileWithMetadataSmallResponseClass));
+        Page<FileWithMetadataSmallResponse> pagedResult = fileWithMetadataRepository
+                .findAllDistinctByUsersWithAccess_Roles_NameIn(roles, paging)
+                .map(this::mapEntityToDTO);
 
-            if (pagedResult.hasContent()) {
-                return ResponseEntity.ok(pagedResult.getContent());
-            } else {
-                return ResponseEntity.ok(Collections.emptyList());
-            }
+        if (pagedResult.hasContent()) {
+            return ResponseEntity.ok(pagedResult.getContent());
+        } else {
+            return ResponseEntity.ok(Collections.emptyList());
         }
+    }
 
     public ResponseEntity<List<FileWithMetadataSmallResponse>> getFilesToDeleteWithPaginationAndSorting(Integer pageNo, Integer pageSize, String sortBy, Class<FileWithMetadataSmallResponse> fileWithMetadataSmallResponseClass, String role) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<FileWithMetadataSmallResponse> pagedResult = fileWithMetadataRepository
                 .findAllByUsersWithAccess_Roles_NameAndCanBeDeletedTrue(ERole.valueOf(role), paging)
-                .map(s -> simpleMapper.mapToDTO(s, fileWithMetadataSmallResponseClass));
+                .map(this::mapEntityToDTO);
 
         if (pagedResult.hasContent()) {
             return ResponseEntity.ok(pagedResult.getContent());
@@ -108,6 +110,34 @@ public class FilesMetadataService {
         } else {
             return ResponseEntity.ok(new DeletionSuccessResponse());
         }
+    }
+
+    public ResponseEntity<List<FileWithMetadataSmallResponse>> getAllWithPaginationAndSorting2(FilesPaginationRequest request, Class<FileWithMetadataSmallResponse> fileWithMetadataSmallResponseClass) {
+        Pageable paging = PageRequest.of(request.getPageNo(), request.getPageSize(), Sort.by(request.getSortBy()));
+
+        List<ERole> roles = request.getRoles().stream().map(ERole::valueOf).collect(Collectors.toList());
+
+        Page<FileWithMetadataSmallResponse> pagedResult = fileWithMetadataRepository
+                .findAllDistinctByUsersWithAccess_Roles_NameIn(roles, paging)
+                .map(s -> simpleMapper.mapToDTO(s, fileWithMetadataSmallResponseClass));
+
+        if (pagedResult.hasContent()) {
+            return ResponseEntity.ok(pagedResult.getContent());
+        } else {
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+    }
+
+    public CountResponse count(List<ERole> roles) {
+        return new CountResponse(fileWithMetadataRepository.countAllDistinctByUsersWithAccess_Roles_NameIn(roles));
+    }
+
+    private FileWithMetadataSmallResponse mapEntityToDTO(FileWithMetadata fileWithMetadata){
+        return new FileWithMetadataSmallResponse(
+                fileWithMetadata.getId(),
+                fileWithMetadata.getCreator().getUserDetailsData().getName() + " " + fileWithMetadata.getCreator().getUserDetailsData().getSurname(),
+                fileWithMetadata.getFormat(),
+                fileWithMetadata.getTitle());
     }
 }
 

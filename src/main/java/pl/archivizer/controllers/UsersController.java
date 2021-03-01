@@ -6,6 +6,7 @@ import pl.archivizer.payload.request.ActivateAccountsRequest;
 import pl.archivizer.payload.response.SimpleUserData;
 import pl.archivizer.payload.response.UserDetailsDataResponse;
 import pl.archivizer.payload.response.CountResponse;
+import pl.archivizer.payload.response.UserNameSurnameWithId;
 import pl.archivizer.services.SimpleUserDataService;
 
 import java.util.List;
@@ -41,6 +42,11 @@ public class UsersController {
     @GetMapping("users/{id}/details")
     public ResponseEntity<UserDetailsDataResponse> getUserDetails(@PathVariable Long id){
         return simpleUserDataService.getUserDetails(id);
+    }
+
+    @GetMapping("usersWithoutPagination")
+    public  ResponseEntity<List<UserNameSurnameWithId>> getAll() {
+        return simpleUserDataService.getAll();
     }
 
 }

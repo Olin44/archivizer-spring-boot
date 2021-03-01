@@ -57,4 +57,9 @@ public class LanguageController {
     public CountResponse countUsers(){
         return languageService.count();
     }
+
+    @GetMapping("languages/withoutPagination")
+    public ResponseEntity<List<LanguageNameResponse>> getAll(){
+        return languageService.getAllWithoutPagination();
+    }
 }

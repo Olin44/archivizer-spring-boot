@@ -15,6 +15,7 @@ import pl.archivizer.payload.request.ActivateAccountsRequest;
 import pl.archivizer.payload.response.SimpleUserData;
 import pl.archivizer.payload.response.UserDetailsDataResponse;
 import pl.archivizer.payload.response.CountResponse;
+import pl.archivizer.payload.response.UserNameSurnameWithId;
 import pl.archivizer.repository.RoleRepository;
 import pl.archivizer.repository.UsersRepository;
 
@@ -24,6 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class SimpleUserDataService {
@@ -39,7 +42,7 @@ public class SimpleUserDataService {
         List<User> users = usersRepository.findAll();
         return ResponseEntity.ok(users.stream()
                 .map(this::convertUserToSimpleUserData)
-                .collect(Collectors.toList()));
+                .collect(toList()));
     }
 
     private SimpleUserData convertUserToSimpleUserData(User user) {
@@ -109,5 +112,15 @@ public class SimpleUserDataService {
             .editDate(LocalDateTime.ofInstant(userDetailsData.getEditDate().toInstant(), ZoneId.systemDefault()))
             .roles(user.getRoles())
             .build();
+    }
+
+    public ResponseEntity<List<UserNameSurnameWithId>> getAll() {
+        return ResponseEntity.ok(usersRepository.findAll().stream().map(this::mapUserToUserNameSurnameWithId).collect(toList()));
+    }
+
+    public UserNameSurnameWithId mapUserToUserNameSurnameWithId(User user){
+        return UserNameSurnameWithId.builder()
+                .id(user.getId())
+                .nameAndSurname(user.getUserDetailsData().getName() + " " + user.getUserDetailsData().getSurname()).build();
     }
 }

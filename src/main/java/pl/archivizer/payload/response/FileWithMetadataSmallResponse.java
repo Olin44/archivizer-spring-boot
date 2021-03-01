@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 public class FileWithMetadataSmallResponse extends BasicResponse {
     @NotNull
-    private Long creatorId;
+    private String creatorNameAndSurname;
     @NotNull
     @NotBlank
     private String format;
@@ -23,8 +23,8 @@ public class FileWithMetadataSmallResponse extends BasicResponse {
     private String title;
 
     @Builder
-    public FileWithMetadataSmallResponse(@NotNull Long id, @NotNull Long creatorId, @NotNull @NotBlank String format, @NotNull @NotBlank String title) {
-        this.creatorId = creatorId;
+    public FileWithMetadataSmallResponse(@NotNull Long id, @NotNull String creatorNameAndSurname, @NotNull @NotBlank String format, @NotNull @NotBlank String title) {
+        this.creatorNameAndSurname = creatorNameAndSurname;
         this.format = format;
         this.title = title;
         this.id = id;

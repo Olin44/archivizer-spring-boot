@@ -6,16 +6,16 @@ import pl.archivizer.exceptions.ConstrainsViolationsException;
 import pl.archivizer.mappers.SimpleMapper;
 import pl.archivizer.models.FileWithMetadata;
 import pl.archivizer.models.Language;
+import pl.archivizer.models.Qualification;
 import pl.archivizer.payload.request.CreateOrUpdateLanguageRequest;
-import pl.archivizer.payload.response.DeletionSuccessResponse;
-import pl.archivizer.payload.response.FileWithMetadataSmallResponse;
-import pl.archivizer.payload.response.LanguageListResponse;
-import pl.archivizer.payload.response.LanguageResponse;
+import pl.archivizer.payload.response.*;
 import pl.archivizer.repository.FileWithMetadataRepository;
 import pl.archivizer.repository.LanguageRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class LanguageService extends BasicDictionaryService<LanguageResponse,
@@ -42,5 +42,14 @@ public class LanguageService extends BasicDictionaryService<LanguageResponse,
             }
             throw new ConstrainsViolationsException(fileWithMetadataSmallResponses);
         }
+    }
+
+    public ResponseEntity<List<LanguageNameResponse>> getAllWithoutPagination() {
+        return ResponseEntity.ok(repository.findAll()
+                .stream().map(this::languageToLanguageNameResponse).collect(toList()));
+    }
+
+    private LanguageNameResponse languageToLanguageNameResponse(Language language){
+        return LanguageNameResponse.builder().id(language.getId()).name(language.getName()).build();
     }
 }

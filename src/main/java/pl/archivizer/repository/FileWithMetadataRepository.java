@@ -18,9 +18,11 @@ public interface FileWithMetadataRepository extends JpaRepository<FileWithMetada
     boolean existsById(Long id);
     boolean existsByIdIn(List<Long> ids);
     Page<FileWithMetadata> findAllByUsersWithAccess_Roles_Name(@Param("name") ERole roleName, Pageable pageable);
+    Page<FileWithMetadata> findAllDistinctByUsersWithAccess_Roles_NameIn(List<ERole> rolesName, Pageable pageable);
     List<FileWithMetadata> findAllByQualification_CanBeDeletedTrue();
     Page<FileWithMetadata> findAllByUsersWithAccess_Roles_NameAndCanBeDeletedTrue(@Param("name") ERole roleName, Pageable pageable);
     void deleteAllByIdIn(List<Long> ids);
     List<FileWithMetadata> findAllByLanguage_Id(@Param("id") Long id);
     List<FileWithMetadata> findAllByQualification_Id(@Param("id") Long id);
+    long countAllDistinctByUsersWithAccess_Roles_NameIn(List<ERole> rolesName);
 }
