@@ -2,7 +2,6 @@ package pl.archivizer.payload.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import pl.archivizer.payload.response.simple.BasicResponse;
 
@@ -16,16 +15,27 @@ import java.util.List;
 @Setter
 public class FileWithMetadataResponse extends BasicResponse {
     @Builder
-    public FileWithMetadataResponse(@NotNull Long id, @NotNull Long creatorId, @NotNull @NotBlank String format, @NotNull @NotBlank String title, List<Integer> rolesWithAccessId, List<Long> usersWithAccess, @NotNull @NotBlank String type, @NotNull Long qualificationId, @NotNull Long languageId, @NotNull @NotEmpty String description, @NotNull String file, Date creationDate) {
+    public FileWithMetadataResponse(@NotNull Long id,
+                                    @NotNull UserNameSurnameWithId  creator,
+                                    @NotNull @NotBlank String format,
+                                    @NotNull @NotBlank String title,
+                                    RolesResponse rolesWithAccess,
+                                    List<UserNameSurnameWithId> usersWithAccess,
+                                    @NotNull @NotBlank String type,
+                                    @NotNull QualificationBasicResponse qualification,
+                                    @NotNull LanguageResponse language,
+                                    @NotNull @NotEmpty String description,
+                                    @NotNull String file,
+                                    Date creationDate) {
         this.id = id;
-        this.creatorId = creatorId;
+        this.creator = creator;
         this.format = format;
         this.title = title;
-        this.rolesWithAccessId = rolesWithAccessId;
+        this.rolesWithAccess = rolesWithAccess;
         this.usersWithAccess = usersWithAccess;
         this.type = type;
-        this.qualificationId = qualificationId;
-        this.languageId = languageId;
+        this.qualification = qualification;
+        this.language = language;
         this.description = description;
         this.file = file;
         this.creationDate = creationDate;
@@ -35,7 +45,8 @@ public class FileWithMetadataResponse extends BasicResponse {
     }
 
     @NotNull
-    private Long creatorId;
+    private UserNameSurnameWithId creator;
+    private RolesResponse rolesWithAccess;
 
     @NotNull
     @NotBlank
@@ -44,19 +55,15 @@ public class FileWithMetadataResponse extends BasicResponse {
     @NotBlank
     private String title;
 
-    private List<Integer> rolesWithAccessId;
-
-    private List<Long> usersWithAccess;
+    private List<UserNameSurnameWithId> usersWithAccess;
 
     @NotNull
     @NotBlank
     private String type;
 
-    @NotNull
-    private Long qualificationId;
+    private @NotNull QualificationBasicResponse qualification;
 
-    @NotNull
-    private Long languageId;
+    private @NotNull LanguageResponse language;
 
     @NotNull @NotEmpty
     private String description;

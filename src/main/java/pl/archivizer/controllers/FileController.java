@@ -1,9 +1,13 @@
 package pl.archivizer.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import pl.archivizer.models.ERole;
 import pl.archivizer.payload.request.CreateOrUpdateFileWithMetadataRequest;
 import pl.archivizer.payload.request.DeleteFilesRequest;
@@ -20,6 +24,7 @@ import java.util.List;
 @RequestMapping("/api/")
 @RequiredArgsConstructor
 public class FileController {
+
     @GetMapping("files")
     public ResponseEntity<List<FileWithMetadataSmallResponse>> getWithPaginationAndSorting(
             @RequestParam(defaultValue = "0") Integer pageNo,
@@ -47,12 +52,12 @@ public class FileController {
     }
 
     @PostMapping(value= "file")
-    public ResponseEntity<CreateSuccessResponse> create(@Validated CreateOrUpdateFileWithMetadataRequest request) throws IOException {
+    public ResponseEntity<CreateSuccessResponse> create(@RequestBody CreateOrUpdateFileWithMetadataRequest request) throws IOException {
         return filesMetadataService.create(request);
     }
 
     @PostMapping("file/{id}")
-    public ResponseEntity<UpdateSuccessResponse> update(@PathVariable Long id, @RequestBody @Validated CreateOrUpdateFileWithMetadataRequest request){
+    public ResponseEntity<UpdateSuccessResponse> update(@PathVariable Long id, @RequestBody @Validated CreateOrUpdateFileWithMetadataRequest request) throws IOException {
         return filesMetadataService.update(request, id);
     }
 

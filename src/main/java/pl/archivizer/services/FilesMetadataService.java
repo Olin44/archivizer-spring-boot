@@ -48,7 +48,7 @@ public class FilesMetadataService {
 
     public ResponseEntity<UpdateSuccessResponse> update(CreateOrUpdateFileWithMetadataRequest request, Long id) {
         if(fileWithMetadataRepository.existsById(id)){
-            FileWithMetadata fileWithMetadata = fileMetadataMapper.mapToEntityCreate(request);
+            FileWithMetadata fileWithMetadata = fileMetadataMapper.mapToEntityUpdate(request);
             fileWithMetadata.setId(id);
             fileWithMetadataRepository.save(fileWithMetadata);
             return ResponseEntity.ok(new UpdateSuccessResponse());
