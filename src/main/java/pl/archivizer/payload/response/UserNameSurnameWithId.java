@@ -9,11 +9,11 @@ import pl.archivizer.payload.response.simple.BasicResponse;
 @Getter
 @Setter
 public class UserNameSurnameWithId extends BasicResponse {
-    private String nameAndSurname;
+    private String creator;
     @Builder
-    public UserNameSurnameWithId(Long id, String nameAndSurname) {
+    public UserNameSurnameWithId(Long id, String creator) {
         this.id = id;
-        this.nameAndSurname = nameAndSurname;
+        this.creator = creator;
     }
 
     public UserNameSurnameWithId() {

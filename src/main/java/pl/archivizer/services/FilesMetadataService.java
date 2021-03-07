@@ -59,7 +59,7 @@ public class FilesMetadataService {
     }
 
     public ResponseEntity<DeletionSuccessResponse> deleteById(Long id) {
-        if(! fileWithMetadataRepository.existsById(id)){
+        if(fileWithMetadataRepository.existsById(id)){
             fileWithMetadataRepository.deleteById(id);
             return ResponseEntity.ok(new DeletionSuccessResponse());
         }

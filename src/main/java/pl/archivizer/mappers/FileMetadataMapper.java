@@ -37,7 +37,7 @@ public class FileMetadataMapper {
     }
 
     private UserNameSurnameWithId mapUserToUserToUserNameAndSurnameWithId(User user){
-        return UserNameSurnameWithId.builder().nameAndSurname(user.getUserDetailsData().getName() + " " + user.getUserDetailsData().getSurname()).id(user.getId()).build();
+        return UserNameSurnameWithId.builder().creator(user.getUserDetailsData().getName() + " " + user.getUserDetailsData().getSurname()).id(user.getId()).build();
     }
 
     public FileWithMetadataResponse mapToDTO(FileWithMetadata fileWithMetadata){

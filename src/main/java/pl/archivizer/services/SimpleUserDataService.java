@@ -121,6 +121,6 @@ public class SimpleUserDataService {
     public UserNameSurnameWithId mapUserToUserNameSurnameWithId(User user){
         return UserNameSurnameWithId.builder()
                 .id(user.getId())
-                .nameAndSurname(user.getUserDetailsData().getName() + " " + user.getUserDetailsData().getSurname()).build();
+                .creator(user.getUserDetailsData().getName() + " " + user.getUserDetailsData().getSurname()).build();
     }
 }

@@ -46,7 +46,7 @@ public class FileController {
         return filesMetadataService.getById(id);
     }
 
-    @DeleteMapping("file_metadata/{id}")
+    @DeleteMapping("file/{id}")
     public ResponseEntity<DeletionSuccessResponse> deleteById(@PathVariable Long id){
         return filesMetadataService.deleteById(id);
     }
