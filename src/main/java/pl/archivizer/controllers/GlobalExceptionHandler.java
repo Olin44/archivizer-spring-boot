@@ -57,13 +57,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             IOException ex) {
         return new ResponseEntity<>(ex, HttpStatus.BAD_REQUEST);
     }
-
-    @ExceptionHandler(SQLException.class)
-    public final ResponseEntity<String> handleSqlExceptions(
-            SQLException ex) {
-        return new ResponseEntity<>("dupa", HttpStatus.BAD_REQUEST);
-    }
-
+    
     @ExceptionHandler(ConstrainsViolationsException.class)
         public final ResponseEntity<ConstrainsViolationResponse> handleConstrainsViolationExceptions(ConstrainsViolationsException ex) {
         ConstrainsViolationResponse response = new ConstrainsViolationResponse(ex.getMessage(), ex.getViolationsList());
